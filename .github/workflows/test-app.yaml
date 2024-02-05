@@ -13,10 +13,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Pull Docker Image
-        run: docker pull arminezyan/my-images:push-from-actions
+        run: docker build test-app-image .
 
       - name: Run Docker Container
-        run: docker run -d -p 8080:8080 arminezyan/my-images:push-from-actions
+        run: docker run -d -p 8080:8080 test-app-image
 
       - name: Wait for App to Start
         run: sleep 10 
@@ -25,4 +25,4 @@ jobs:
         run: curl -I http://localhost:8080 
 
       - name: Stop Docker Container
-        run: docker stop $(docker ps -q --filter ancestor=arminezyan/my-images:push-from-actions)
+        run: docker stop $(docker ps -q --filter ancestor=test-app-image)
