@@ -22,7 +22,11 @@ jobs:
         run: sleep 10 
 
       - name: Test App
-        run: curl -I http://localhost:8080 
-
+        run: | 
+         curl -I http://localhost:8080 
+         if [[ $? -ne 0]]; then
+             exit 1
+         fi
+          
       - name: Stop Docker Container
         run: docker stop $(docker ps -q --filter ancestor=test-app-image)
