@@ -1,0 +1,28 @@
+name: Test app with Docker on Pull Request
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Pull Docker Image
+        run: docker pull arminezyan/my-images:push-from-actions
+
+      - name: Run Docker Container
+        run: docker run -d -p 8080:8080 arminezyan/my-images:push-from-actions
+
+      - name: Wait for App to Start
+        run: sleep 10 
+
+      - name: Test App
+        run: curl -I http://localhost:8080 
+
+      - name: Stop Docker Container
+        run: docker stop $(docker ps -q --filter ancestor=arminezyan/my-images:push-from-actions)
