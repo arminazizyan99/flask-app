@@ -2,8 +2,8 @@ name: Add docker image to the docker hub repository
 
 on:
   pull_request:
-      branches: [main]
-
+    types: [closed]
+    
 jobs:
  docker-push:
      name: Push docker image to the docker hub repository
