@@ -1,13 +1,13 @@
 name: Add docker image to the docker hub repository
 
 on:
-  push:
+  pull_request:
       branches: [main]
 
 jobs:
  docker-push:
      name: Push docker image to the docker hub repository
-     if: github.event_name == 'push' && github.event.ref == 'refs/heads/main'
+     if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
      runs-on: ubuntu-latest
 
      steps: 
