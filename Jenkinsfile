@@ -1,27 +1,40 @@
 pipeline {
     agent any
-    
+
+    environment {
+        // Define environment variables
+        BUILD_VERSION = '1.0.0'
+        IMAGE_NAME = 'my-docker-image'
+        TAG = "${BUILD_VERSION}-${env.BUILD_NUMBER}"
+    }
+
     stages {
         stage('Delete Workspace') {
             steps {
                 deleteDir()
             }
         }
+
         stage('Checkout repo') {
             steps {
-               sh "git clone 'https://github.com/arminazizyan99/flask-app.git'"
+                sh "git clone 'https://github.com/arminazizyan99/flask-app.git'"
             }
         }
+
         stage('Docker image build') {
             steps {
-               def dockerImage = docker.build("my-docker-image:latest")
+                script {
+                    def dockerImage = docker.build("${IMAGE_NAME}:${TAG}")
+                }
             }
         }
 
         stage('Run Docker Container') {
             steps {
-              def dockerImage = docker.image("my-docker-image:latest")
-              def dockerContainer = dockerImage.run("-d", "-p", "8080:80")
+                script {
+                    def dockerImage = docker.image("${IMAGE_NAME}:${TAG}")
+                    def dockerContainer = dockerImage.run("-d", "-p", "8080:80")
+                }
             }
         }
     }
