@@ -21,7 +21,7 @@ pipeline {
             }
         }
 
-        stage('Docker image build') {
+        stage('Docker run build') {
             steps {
                 sh 'docker run -d -p 80:8080 $DOCKER_IMAGE'
             }
