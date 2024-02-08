@@ -18,10 +18,10 @@ pipeline {
             }
         }
 
-        stage('Docker run build') {
+        stage('Run Docker Container') {
             steps {
               def dockerImage = docker.image("my-docker-image:latest")
-              def dockerContainer = dockerImage.run("-d -p 8080:80")
+              def dockerContainer = dockerImage.run("-d", "-p", "8080:80")
             }
         }
     }
