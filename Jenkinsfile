@@ -1,40 +1,17 @@
 pipeline {
-    agent any
-    
-    environment {
-        DOCKER_IMAGE = 'my-flask-app:fromJenkins'
+    agent {
+        docker {
+            image 'docker:19.03.12' // Docker-in-Docker-capable Docker image
+            args '-v /var/run/docker.sock:/var/run/docker.sock' // Mount Docker socket
+        }
     }
     
     stages {
-        stage('Delete Workspace') {
+        stage('Build Docker Image') {
             steps {
-                deleteDir()
+                echo 'Building Docker image...'
+                sh 'docker build -t my-flask-app:fromJenkins .'
             }
-        }
-        stage('Checkout repo') {
-            steps {
-                sh "git clone 'https://github.com/arminazizyan99/flask-app.git'"
-            }
-        }
-        stage('Docker image build') {
-            steps {
-                sh "docker build -t $DOCKER_IMAGE ."
-            }
-        }
-
-        stage('Docker run build') {
-            steps {
-                sh "docker run -d -p 80:8080 $DOCKER_IMAGE"
-            }
-        }
-    }
-    
-    post {
-        success {
-            echo 'Pipeline succeeded!'
-        }
-        failure {
-            echo 'Pipeline failed!'
         }
     }
 }
