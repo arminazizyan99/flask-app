@@ -1,9 +1,6 @@
 pipeline {
     agent any
-
-      environment {
-        DOCKER_IMAGE = 'my-flask-app:fromJenkins'
-    }
+    
     stages {
         stage('Delete Workspace') {
             steps {
@@ -17,13 +14,14 @@ pipeline {
         }
         stage('Docker image build') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE .'
+               def dockerImage = docker.build("my-docker-image:latest")
             }
         }
 
         stage('Docker run build') {
             steps {
-                sh 'docker run -d -p 80:8080 $DOCKER_IMAGE'
+              def dockerImage = docker.image("my-docker-image:latest")
+              def dockerContainer = dockerImage.run("-d -p 8080:80")
             }
         }
     }
