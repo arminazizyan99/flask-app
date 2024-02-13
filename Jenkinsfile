@@ -46,7 +46,7 @@ pipeline {
                 sh "ps aux | grep 'python /usr/src/app/app.py'"
                 sh label: 'check app url', returnStdout: true, script: "curl http://localhost:5000"
                 sh label: 'check last command status', script: "echo \$?"
-                sh label: 'check status', script: "if [[ \$? -ne 0]]; then exit 1; fi"
+                sh label: 'check status', script: "if [ \$? -ne 0 ]; then exit 1; fi"
               }
             }
           }
