@@ -36,7 +36,7 @@ pipeline {
                 script {
                     img = registry + ":push-from-jenkins-${env.BUILD_ID}"
                     println ("${img}")
-                    dockerImage = docker.build("${img}", "-f ${dockerfilePath}/Dockerfile ${dockerfilePath}"))
+                    dockerImage = docker.build("${img}")
                 }
             }
         }
