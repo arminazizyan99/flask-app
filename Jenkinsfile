@@ -1,9 +1,6 @@
 pipeline {
     agent any
-    
-    tools {
-        git 'Git'
-    }
+ 
     environment {
         registry = "arminezyan/my-images" 
         registryCredential = 'DOCKERHUB'
@@ -14,9 +11,7 @@ pipeline {
         
         stage('Checkout') {
                 steps {
-                git branch: 'main',
-                credentialsId: githubCredential,
-                url: 'https://github.com/arminazizyan99/flask-app.git'
+                sh "git clone https://github.com/arminazizyan99/flask-app.git"
                 }
         }
         
