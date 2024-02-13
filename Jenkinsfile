@@ -9,6 +9,12 @@ pipeline {
     }
     stages {
         
+        stage('Delete Workspace') {
+            steps {
+                deleteDir()
+            }
+        }
+        
         stage('Checkout') {
                 steps {
                 sh "git clone https://github.com/arminazizyan99/flask-app.git"
