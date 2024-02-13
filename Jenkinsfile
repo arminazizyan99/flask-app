@@ -6,6 +6,13 @@ pipeline {
         registryCredential = 'DOCKERHUB'
         dockerImage = ''
     }
+
+    def CleanUp(){
+        
+         sh returnStatus: true, script: '$(docker ps -a)'
+         sh returnStatus: true, script: 'docker stop $(docker ps -a | grep ${JOB_NAME} | awk \'{print $1}\')'
+         sh returnStatus: true, script: 'docker rm -f $(docker ps -a | grep ${JOB_NAME} | awk \'{print $1}\')'
+    }
     stages {
         
         stage('Delete Workspace') {
@@ -23,9 +30,9 @@ pipeline {
         
         stage ('Clean Up'){
             steps{
-                sh returnStatus: true, script: '$(docker ps -a)'
-                sh returnStatus: true, script: 'docker stop $(docker ps -a | grep ${JOB_NAME} | awk \'{print $1}\')'
-                sh returnStatus: true, script: 'docker rm -f $(docker ps -a | grep ${JOB_NAME} | awk \'{print $1}\')'
+                 script{
+                       CleanUp()
+                 }
             }
         }
 
@@ -60,8 +67,15 @@ pipeline {
                  }
             }
         }
-                
+        stage ('Clean Up'){
+            steps{
+                 script{
+                       CleanUp()
+                 }
+            }
+        }        
     }
+    
 post {
     success {
             echo 'Pipeline succeeded!'
