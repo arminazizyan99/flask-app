@@ -29,7 +29,7 @@ pipeline {
         }
         
         
-        stage ('Clean Up'){
+        stage ('Clean Up 1'){
             steps{
                  script{
                        CleanUp()
@@ -68,7 +68,7 @@ pipeline {
                  }
             }
         }
-        stage ('Clean Up'){
+        stage ('Clean Up 2'){
             steps{
                  script{
                        CleanUp()
