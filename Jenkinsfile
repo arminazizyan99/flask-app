@@ -43,10 +43,9 @@ pipeline {
            steps {
                script{ 
                 sh label: 'run docker image', script: "docker run -d --name ${JOB_NAME} -p 5000:8089 ${img}"
-                sh "ps aux"
                 sh label: 'check app url', returnStdout: true, script: "curl http://localhost:5000"
                 sh label: 'check last command status', script: "echo \$?"
-                sh label: 'check status', script: "if [[ \$? -ne 0]]; then exit 1 fi"
+                sh label: 'check status', script: "if [[ \$? -ne 0]]; then exit 1; fi"
               }
             }
           }
