@@ -1,6 +1,9 @@
 pipeline {
     agent any
     
+    tools {
+        git 'Git'
+    }
     environment {
         registry = "arminezyan/my-images" 
         registryCredential = 'DOCKERHUB'
