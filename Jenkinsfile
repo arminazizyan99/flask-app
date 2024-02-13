@@ -1,5 +1,5 @@
 def CleanUp(){
-    
+     // stop rm docker container
      sh returnStatus: true, script: '$(docker ps -a)'
      sh returnStatus: true, script: 'docker stop $(docker ps -a | grep ${JOB_NAME} | awk \'{print $1}\')'
      sh returnStatus: true, script: 'docker rm -f $(docker ps -a | grep ${JOB_NAME} | awk \'{print $1}\')'
