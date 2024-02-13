@@ -18,6 +18,7 @@ pipeline {
         stage('Checkout') {
                 steps {
                 sh "git clone https://github.com/arminazizyan99/flask-app.git"
+                sh "pwd"
                 }
         }
         
@@ -35,7 +36,7 @@ pipeline {
                 script {
                     img = registry + ":push-from-jenkins-${env.BUILD_ID}"
                     println ("${img}")
-                    dockerImage = docker.build("${img}")
+                    dockerImage = docker.build("${img}", "-f ${dockerfilePath}/Dockerfile ${dockerfilePath}"))
                 }
             }
         }
