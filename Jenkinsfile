@@ -19,6 +19,7 @@ pipeline {
                 steps {
                 sh "git clone https://github.com/arminazizyan99/flask-app.git"
                 sh "pwd"
+                sh "ls -al"
                 }
         }
         
