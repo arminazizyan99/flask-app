@@ -8,7 +8,7 @@ COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Expose the port that the application listens on.
-EXPOSE 8089
+EXPOSE 8080
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV MY_VAR World
