@@ -12,6 +12,8 @@ pipeline {
         registry = "arminezyan/my-images" 
         registryCredential = 'DOCKERHUB'
         dockerImage = ''
+        img = "${registry}" + ":push-from-jenkins-${env.BUILD_ID}"
+        GOOGLE_APPLICATION_CREDENTIALS = credentials('my-gcp-account')
     }
 
     stages {
@@ -40,8 +42,6 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    img = registry + ":push-from-jenkins-${env.BUILD_ID}"
-                    println ("${img}")
                     dockerImage = docker.build("${img}", "-f flask-app/Dockerfile flask-app")
                 }
             }
@@ -50,10 +50,10 @@ pipeline {
         stage('Run docker image') {
            steps {
                script{ 
-                sh label: 'run docker image', script: "docker run -d --name ${JOB_NAME} -p 5000:8089 ${img}"
+                sh label: 'run docker image', script: "docker run -d --name ${JOB_NAME} -p 5000:8080 ${img}"
                 sh "ps aux | grep 'python /usr/src/app/app.py'"
                 sh label: 'check app url', returnStdout: true, script: "curl http://localhost:5000"
-                sh label: 'check last command status', script: "echo \$?"
+                sh label: 'echo last command status', script: "echo \$?"
                 sh label: 'check status', script: "if [ \$? -ne 0 ]; then exit 1; fi"
               }
             }
@@ -74,7 +74,18 @@ pipeline {
                        CleanUp()
                  }
             }
-        }        
+        }
+        stage('Deploy to Cloud Run') {
+            steps { 
+                script{
+                withCredentials([file(credentialsId: 'my-gcp-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                    sh 'gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS'
+                    sh "gcloud run deploy flask-app --image=docker.io/${img} --platform=managed --project=my-test-project-414508 --region=europe-west1"
+                }
+              }
+            }
+        }
+
     }
     
 post {
